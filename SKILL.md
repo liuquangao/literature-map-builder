@@ -4,8 +4,8 @@ description: >
   Build a structured literature-to-positioning pipeline for a new research topic
   or proposal: collect representative papers, download and validate open-access
   PDFs, create literature-map.md and a manifest; convert the collection into a
-  gap map by extracting PDF text, tagging each paper by
-  modality/platform/task/method/action-conditioning/world-model status,
+  gap map by extracting PDF text, tagging each paper by project-relevant
+  dimensions such as domain, task, method, data, evaluation, and limitations,
   classifying Core/Support/Peripheral papers, writing core-paper-notes.md, and
   producing gap-summary.md; then turn the gap analysis into
   proposal-positioning.md with candidate titles, cautious problem statement,
@@ -50,7 +50,7 @@ follow-up search.
 3. Build a search matrix across subareas.
    - Search beyond the user's favorite method or anchor paper.
    - Include surveys, foundational papers, recent papers, datasets, benchmarks,
-     and task-specific robotics/ML papers when relevant.
+     and task-specific papers when relevant.
 4. Prefer open, reliable PDF sources:
    - arXiv;
    - PMLR;
@@ -102,9 +102,9 @@ Use Stage 2 after there is a local PDF collection and a first-pass
    - Summarize category-level patterns.
 5. Create `core-paper-notes.md`.
    - Read the priority core set more carefully.
-   - For each paper, record what it solves, modalities/platform/task, whether it
-     is a world model, whether it is action-conditioned, what it does not solve,
-     how it threatens novelty, and how it can be used in a proposal.
+   - For each paper, record what it solves, the domain/task/method/data and
+     evaluation setting, what it does not solve, how it threatens novelty, and
+     how it can be used in a proposal.
 6. Create `gap-summary.md`.
    - State evidence-backed candidate gaps.
    - For each candidate gap, include supporting evidence, nearest competing
@@ -159,17 +159,19 @@ For each subarea, try to include:
 - two to five recent papers;
 - at least one method paper and one dataset/evaluation paper when possible.
 
-For robotics proposals, consider these dimensions:
+For domain-specific proposals, adapt the tagging dimensions to the project. Do
+not assume any one domain, platform, or method is central unless the user's
+project instructions say so. Common dimensions include:
 
-- sensors and modalities;
-- robot platform;
-- task;
-- training paradigm;
-- prediction target;
-- action conditioning;
-- safety or robustness;
-- real robot vs simulation;
-- benchmark or dataset availability.
+- problem setting or deployment context;
+- inputs, modalities, or data sources;
+- platform, system, population, or environment;
+- task, objective, or decision being supported;
+- method family or training paradigm;
+- outputs or prediction targets;
+- safety, robustness, fairness, reliability, or human-facing constraints;
+- real-world, simulation, retrospective, or benchmark evaluation;
+- dataset, benchmark, or measurement availability.
 
 ## Download Script
 
@@ -183,8 +185,9 @@ expects columns:
 Example:
 
 ```powershell
+$SkillDir = "$HOME\.codex\skills\literature-map-builder"
 powershell -ExecutionPolicy Bypass -File `
-  "C:\Users\Leo\.codex\skills\literature-map-builder\scripts\download_open_pdfs.ps1" `
+  (Join-Path $SkillDir "scripts\download_open_pdfs.ps1") `
   -CsvPath ".\paper-candidates.csv" `
   -OutputDir ".\reference-papers-pdf" `
   -ManifestPath ".\reference-papers-pdf\download-manifest.csv"
@@ -201,8 +204,9 @@ The script expects an input PDF directory and output text directory.
 Example:
 
 ```powershell
+$SkillDir = "$HOME\.codex\skills\literature-map-builder"
 powershell -ExecutionPolicy Bypass -File `
-  "C:\Users\Leo\.codex\skills\literature-map-builder\scripts\extract_pdf_text_cache.ps1" `
+  (Join-Path $SkillDir "scripts\extract_pdf_text_cache.ps1") `
   -PdfDir ".\reference-papers-pdf" `
   -TextDir ".\paper-text-cache" `
   -FirstPage 1 `
@@ -224,14 +228,14 @@ The first-pass map should include:
 
 The second-pass gap map should expand each paper with:
 
-- sensor modalities;
-- robot platform or environment;
-- task;
-- world-model, fusion, or learning method;
-- prediction target;
-- action conditioning;
-- missing/noisy modality handling;
-- real robot vs simulation;
+- domain or application setting;
+- inputs, modalities, or data sources;
+- platform, system, population, or environment;
+- task or objective;
+- method type;
+- output, prediction target, or intervention;
+- evaluation setting;
+- robustness, safety, fairness, or reliability concern;
 - limitation or gap;
 - proposal relevance.
 
@@ -259,10 +263,8 @@ Create `proposal-positioning.md` unless the user requests a different name. Use
 - If a PDF fails to download, record the failure and move on to an open
   alternative when possible.
 - Do not present first-pass observations as final research contributions.
-- Distinguish "paper is multimodal" from "paper is a world model"; do not blur
-  these categories.
-- Distinguish task-specific prediction, such as traversability, from a general
-  action-conditioned world model.
+- Keep project-specific categories distinct; for example, do not blur input
+  modality, model type, prediction target, and evaluation task.
 - Always name nearest competing papers for each candidate gap.
 - In proposal positioning, distinguish candidate gaps from final novelty claims.
 - Prefer "the current map suggests..." or "we hypothesize..." until targeted
