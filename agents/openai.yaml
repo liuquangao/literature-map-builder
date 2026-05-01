@@ -1,0 +1,3 @@
+display_name: Literature Map Builder
+short_description: Build literature maps, gap maps, and proposal positioning from research papers.
+default_prompt: Use literature-map-builder to collect open-access papers for this research topic, download PDFs, create a first-pass literature map, build a structured gap map, and turn the gap analysis into cautious proposal positioning without prematurely claiming novelty.
